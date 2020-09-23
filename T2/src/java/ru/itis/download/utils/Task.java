@@ -55,7 +55,7 @@ public class Task implements Runnable {
             out.close();
             inputStream.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IllegalArgumentException(e);
         }
     }
 }
