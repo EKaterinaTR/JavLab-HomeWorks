@@ -17,14 +17,21 @@ public class Main {
 					.addObject(args)
 					.build()
 					.parse(argv);
-		int count =(args.mode.equals("one-thread"))? 1 : args.count;
-		ExecutorService executorService = Executors.newFixedThreadPool(count);
-		for(String str: args.files){
-			executorService.submit(new Task(str,args.folder));
+		if(args.mode.equals("one-thread")){
+			for(String str: args.files){
+				(new Task(str,args.folder)).run();
+			}
 			
 		}
+		else{
+			ExecutorService executorService = Executors.newFixedThreadPool(args.count);
+			for(String str: args.files){
+				executorService.submit(new Task(str,args.folder));
+			
+			}
       		
-		executorService.shutdown();
+			executorService.shutdown();
+		}
 
     }
 }
