@@ -35,14 +35,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
     public UsersRepositoryJdbcImpl(DataSource dataSource) {
         this.dataSource = dataSource;
-        try {
-            simpleJdbcTemplate = new SimpleJdbcTemplate(dataSource.getConnection());
-        } catch (SQLException throwables) {
-            throw new IllegalStateException(throwables);
-
-        }
-
-
+        simpleJdbcTemplate = new SimpleJdbcTemplate(dataSource);
     }
 
 

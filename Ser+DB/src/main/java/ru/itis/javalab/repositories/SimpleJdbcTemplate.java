@@ -1,37 +1,30 @@
 package ru.itis.javalab.repositories;
 
-import ru.itis.javalab.models.User;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleJdbcTemplate {
-    private Connection connection;
-    SimpleJdbcTemplate(Connection connection) {
-        this.connection = connection;
+    private DataSource dataSource;
+    SimpleJdbcTemplate(DataSource source) {
+        dataSource = source;
     }
     public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object ... args) {
-        Statement statement = null;
+        Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
 
         try {
-
-            if(args != null){
-                preparedStatement = connection.prepareStatement(sql);
-                int i = 1;
-                for(Object o : args){
-                    preparedStatement.setObject(1,o);
-                    i++;
-                }
-                resultSet = preparedStatement.executeQuery();
+            connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            int i = 1;
+            for(Object o : args){
+                preparedStatement.setObject(i,o);
+                i++;
             }
-            else {
-                statement = connection.createStatement();
-                resultSet = statement.executeQuery(sql);
-            }
-
+            resultSet = preparedStatement.executeQuery();
             List<T> result = new ArrayList<>();
 
             while (resultSet.next()) {
@@ -49,9 +42,16 @@ public class SimpleJdbcTemplate {
                     //ignore
                 }
             }
-            if (statement != null) {
+            if (preparedStatement != null) {
                 try {
-                    statement.close();
+                    preparedStatement.close();
+                } catch (SQLException throwables) {
+                    // ignore
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
                 } catch (SQLException throwables) {
                     // ignore
                 }
