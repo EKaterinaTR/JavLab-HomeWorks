@@ -25,9 +25,4 @@ public class UsersServiceImpl implements UsersService {
     public List<User> getAllUsers() {
         return usersRepository.findAll();
     }
-
-    @Override
-    public boolean hasThisCookie(String uuid) {
-        return usersRepository.findAnyByCookie(uuid);
-    }
 }

@@ -16,15 +16,13 @@ import java.util.Optional;
  * @version v1.0
  */
 public class UsersRepositoryJdbcImpl implements UsersRepository {
-  //TODO:новую таблицу создать
+
     //language=SQL
     private static final String SQL_FIND_ALL = "select * from student";
 
     //language=SQL
     private static final String SQL_FIND_ALL_BY_AGE = "select * from student where age = ?";
 
-    //language=SQL
-    private static final String SQL_FIND_ANY_BY_COOKIE = "select * from student where cookie = ?";
 
     private DataSource dataSource;
     private SimpleJdbcTemplate simpleJdbcTemplate;
@@ -78,9 +76,6 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
     }
 
-    @Override
-    public Boolean findAnyByCookie(String uuid) {
-         return !(simpleJdbcTemplate.query(SQL_FIND_ANY_BY_COOKIE, userRowMapper, uuid).isEmpty());
-    }
+
 }
 

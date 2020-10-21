@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SimpleJdbcTemplate {
+
     private DataSource dataSource;
     SimpleJdbcTemplate(DataSource source) {
         dataSource = source;
@@ -59,4 +60,41 @@ public class SimpleJdbcTemplate {
         }
 
     }
+
+    public void queryWithoutAnswer(String sql, Object ... args) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+
+
+        try {
+            connection = dataSource.getConnection();
+            preparedStatement = connection.prepareStatement(sql);
+            int i = 1;
+            for(Object o : args){
+                preparedStatement.setObject(i,o);
+                i++;
+            }
+            preparedStatement.executeUpdate();
+
+        } catch (SQLException e) {
+            throw new IllegalStateException(e);
+        } finally {
+            if (preparedStatement != null) {
+                try {
+                    preparedStatement.close();
+                } catch (SQLException throwables) {
+                    // ignore
+                }
+            }
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException throwables) {
+                    // ignore
+                }
+            }
+        }
+
+    }
+
 }

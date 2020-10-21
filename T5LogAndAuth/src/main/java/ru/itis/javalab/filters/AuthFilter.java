@@ -1,4 +1,5 @@
 package ru.itis.javalab.filters;
+import ru.itis.javalab.services.CookiesService;
 import ru.itis.javalab.services.UsersService;
 
 import javax.servlet.*;
@@ -10,22 +11,21 @@ import java.io.IOException;
 
 @WebFilter("/enter/*")
 public class AuthFilter implements Filter {
-    private UsersService usersService;
+    private CookiesService cookiesService;
     private final String AUTH = "Auth";
     private final String PATH ="/login";
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         ServletContext servletContext = filterConfig.getServletContext();
-        this.usersService = (UsersService) servletContext.getAttribute("usersService");
-        //TODO: проверить подключение к сервисам
+        this.cookiesService = (CookiesService) servletContext.getAttribute("cookiesService");
+
 
     }
 
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
-              //TODO: проверить наличие куки и совпадение с базой данных
-        //System.out.println("working");
+
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
@@ -40,7 +40,7 @@ public class AuthFilter implements Filter {
             }
         }
 
-        if(cookie != null && usersService.hasThisCookie(cookie.getValue())){
+        if(cookie != null && cookiesService.hasThisCookie(cookie.getValue())){
             filterChain.doFilter(servletRequest, servletResponse);
         }
         else {

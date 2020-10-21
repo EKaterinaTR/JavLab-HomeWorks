@@ -2,8 +2,12 @@ package ru.itis.javalab.listeners;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import ru.itis.javalab.repositories.CookiesRepository;
+import ru.itis.javalab.repositories.CookiesRepositoryJdbcImpl;
 import ru.itis.javalab.repositories.UsersRepository;
 import ru.itis.javalab.repositories.UsersRepositoryJdbcImpl;
+import ru.itis.javalab.services.CookiesService;
+import ru.itis.javalab.services.CookiesServiceImpl;
 import ru.itis.javalab.services.UsersService;
 import ru.itis.javalab.services.UsersServiceImpl;
 
@@ -52,6 +56,11 @@ public class CustomServletContextListener implements ServletContextListener {
         UsersService usersService = new UsersServiceImpl(usersRepository);
 
         servletContext.setAttribute("usersService", usersService);
+
+        CookiesRepository cookiesRepository = new CookiesRepositoryJdbcImpl(dataSource);
+        CookiesService cookiesService = new CookiesServiceImpl(cookiesRepository);
+        servletContext.setAttribute("cookiesService", cookiesService);
+
     }
 
     @Override
