@@ -16,7 +16,7 @@ public class LoggingFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
          logger = LoggerFactory.getLogger(LoggingFilter.class);
-        //TODO: подключение к сервисам
+
     }
 
     @Override

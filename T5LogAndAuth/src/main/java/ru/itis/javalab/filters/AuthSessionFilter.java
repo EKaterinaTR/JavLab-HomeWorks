@@ -4,16 +4,16 @@ import ru.itis.javalab.services.CookiesService;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-//@WebFilter("/enter/*")
-public class AuthFilter implements Filter {
+@WebFilter("/enter/*")
+public class AuthSessionFilter implements Filter {
     private CookiesService cookiesService;
     private final String AUTH = "Auth";
-    private final String PATH ="/login";
+    private final String PATH ="/login2";
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         ServletContext servletContext = filterConfig.getServletContext();
@@ -24,23 +24,14 @@ public class AuthFilter implements Filter {
 
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
+        //TODO:ПЕРЕДЕЛАТЬ ДЛЯ СЕССИИ
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;
 
-        Cookie[] cookies = request.getCookies();
-        Cookie cookie = null;
-        if(cookies !=null) {
-            for(Cookie c: cookies) {
-                if(AUTH.equals(c.getName())) {
-                    cookie = c;
-                    break;
-                }
-            }
-        }
-
-        if(cookie != null && cookiesService.hasThisCookie(cookie.getValue())){
+        if(cookiesService.hasThisCookie(((HttpServletRequest) servletRequest).getSession().getId())){
             filterChain.doFilter(servletRequest, servletResponse);
         }
         else {
@@ -55,3 +46,4 @@ public class AuthFilter implements Filter {
     }
 
 }
+
