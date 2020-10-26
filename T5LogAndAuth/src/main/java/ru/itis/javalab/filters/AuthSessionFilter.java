@@ -11,7 +11,6 @@ import java.io.IOException;
 @WebFilter("/enter/*")
 public class AuthSessionFilter implements Filter {
     private CookiesService cookiesService;
-    private final String AUTH = "Auth";
     private final String PATH ="/login2";
 
     @Override
@@ -26,7 +25,6 @@ public class AuthSessionFilter implements Filter {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
             throws IOException, ServletException {
-        //TODO:ПЕРЕДЕЛАТЬ ДЛЯ СЕССИИ
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse)servletResponse;

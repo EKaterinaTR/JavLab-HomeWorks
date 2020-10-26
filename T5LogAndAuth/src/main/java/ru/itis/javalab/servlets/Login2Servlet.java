@@ -1,6 +1,8 @@
 package ru.itis.javalab.servlets;
 
+import ru.itis.javalab.models.User;
 import ru.itis.javalab.services.CookiesService;
+import ru.itis.javalab.services.UsersService;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -16,25 +18,40 @@ import java.util.UUID;
 @WebServlet("/login2")
 public class Login2Servlet extends HttpServlet {
     private CookiesService cookiesService;
+    private UsersService usersService;
 
     @Override
     public void init (ServletConfig config) throws ServletException {
+        //надо ли ловить ошибки ?
         ServletContext servletContext = config.getServletContext();
         this.cookiesService = (CookiesService) servletContext.getAttribute("cookiesService");
+        this.usersService = (UsersService) servletContext.getAttribute("usersService");
 
 
     }
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        cookiesService.addNewCookie(10L,request.getSession().getId());
-        System.out.println("there2");
+
+        request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
 
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        super.doPost(req, resp);
-        //TODO:сделать ответ в пост (вход страница)
-        //TODO: сделать штфрование
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //TODO: сделать шифрование
+        String login = request.getParameter("login");
+        String password = request.getParameter("password");
+        User user = usersService.getUserBy(login,password);
+        if (user != null){
+            cookiesService.addNewCookie(user.getId(),request.getSession().getId());
+            System.out.println("there2");
+            response.sendRedirect(request.getContextPath() + "/enter/prof");
+        }
+        else {
+            //response.sendRedirect(request.getContextPath() + "/registration");
+            System.out.println("no registration");
+        }
+
+
     }
 }

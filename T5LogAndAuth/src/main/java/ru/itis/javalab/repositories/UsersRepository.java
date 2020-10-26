@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 public interface UsersRepository extends CrudRepository<User> {
-    List<User> findAllByAge(int age);
+    List<User> findAllByAge (int age);
+    User findByLogAndPassword (String log,String password);
 
 }

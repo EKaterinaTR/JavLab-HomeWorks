@@ -22,6 +22,9 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
     //language=SQL
     private static final String SQL_FIND_ALL_BY_AGE = "select * from student where age = ?";
+    //language=SQL
+    private static final String SQL_FIND_BY_LOG_AND_PASS =
+            "select * from student join log_pass on log_pass.id_user = student.id where log = ? and pass = ?";
 
 
     private DataSource dataSource;
@@ -74,6 +77,15 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
         return simpleJdbcTemplate.query(SQL_FIND_ALL_BY_AGE, userRowMapper, age);
 
+    }
+
+    @Override
+    public User findByLogAndPassword(String log, String password) {
+        List<User> list = simpleJdbcTemplate.query(SQL_FIND_BY_LOG_AND_PASS,userRowMapper,log,password);
+        if(list != null && list.size() == 1) {
+            return list.get(0);
+        }
+        return null;
     }
 
 

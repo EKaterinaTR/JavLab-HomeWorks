@@ -28,6 +28,7 @@ public class SimpleJdbcTemplate {
             resultSet = preparedStatement.executeQuery();
             List<T> result = new ArrayList<>();
 
+
             while (resultSet.next()) {
                 result.add(rowMapper.mapRow(resultSet));
             }

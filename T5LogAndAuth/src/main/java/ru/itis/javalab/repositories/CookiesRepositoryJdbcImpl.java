@@ -13,7 +13,6 @@ public class CookiesRepositoryJdbcImpl implements CookiesRepository {
     private SimpleJdbcTemplate simpleJdbcTemplate;
     private RowMapper<User> userRowMapper = row -> User.builder()
             .id(row.getLong("stud_id"))
-            .authCookie(row.getString("cookie"))
             .build();
 
 

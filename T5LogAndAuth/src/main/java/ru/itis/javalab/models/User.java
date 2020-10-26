@@ -15,7 +15,8 @@ public class User {
     String firstName;
     String lastName;
     Integer age;
-    String authCookie;
+
+
 
     @Override
     public String toString() {
