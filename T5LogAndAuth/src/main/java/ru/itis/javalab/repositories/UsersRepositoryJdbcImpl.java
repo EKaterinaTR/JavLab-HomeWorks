@@ -23,8 +23,11 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     //language=SQL
     private static final String SQL_FIND_ALL_BY_AGE = "select * from student where age = ?";
     //language=SQL
-    private static final String SQL_FIND_BY_LOG_AND_PASS =
-            "select * from student join log_pass on log_pass.id_user = student.id where log = ? and pass = ?";
+    private static final String SQL_FIND_BY_LOG =
+            "select * from student  where login = ? ";
+    //language=SQL
+    private static final String SQL_UPDATE_PASSWORD =
+            "UPDATE student set hash_password = ? where id = ? ";
 
 
     private DataSource dataSource;
@@ -34,6 +37,8 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
             .firstName(row.getString("first_name"))
             .lastName(row.getString("last_name"))
             .age(row.getInt("age"))
+            .hashPassword(row.getString("hash_password"))
+            .login(row.getString("login"))
             .build();
 
 
@@ -80,12 +85,17 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     }
 
     @Override
-    public User findByLogAndPassword(String log, String password) {
-        List<User> list = simpleJdbcTemplate.query(SQL_FIND_BY_LOG_AND_PASS,userRowMapper,log,password);
+    public User findByLog(String log) {
+        List<User> list = simpleJdbcTemplate.query(SQL_FIND_BY_LOG,userRowMapper,log);
         if(list != null && list.size() == 1) {
             return list.get(0);
         }
         return null;
+    }
+
+    @Override
+    public void updatePassword(User u) {
+           simpleJdbcTemplate.queryWithoutAnswer(SQL_UPDATE_PASSWORD,u.getHashPassword(),u.getId());
     }
 
 

@@ -3,6 +3,7 @@ package ru.itis.javalab.servlets;
 import ru.itis.javalab.models.User;
 import ru.itis.javalab.services.CookiesService;
 import ru.itis.javalab.services.UsersService;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -12,17 +13,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@WebServlet("/change_password")
+public class ChangePassword extends HttpServlet {
 
-@WebServlet("/login2")
-public class Login2Servlet extends HttpServlet {
-    private CookiesService cookiesService;
     private UsersService usersService;
 
     @Override
     public void init (ServletConfig config) throws ServletException {
         //надо ли ловить ошибки ?
         ServletContext servletContext = config.getServletContext();
-        this.cookiesService = (CookiesService) servletContext.getAttribute("cookiesService");
         this.usersService = (UsersService) servletContext.getAttribute("usersService");
 
 
@@ -30,21 +29,18 @@ public class Login2Servlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+        request.getRequestDispatcher("/jsp/change_password.jsp").forward(request, response);
 
     }
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-
         String login = request.getParameter("login");
+        String lastPassword = request.getParameter("last_password");
         String password = request.getParameter("password");
-        User user = usersService.signIn(login,password);
-        if (user != null){
-            cookiesService.addNewCookie(user.getId(),request.getSession().getId());
-            System.out.println("there2");
-            response.sendRedirect(request.getContextPath() + "/enter/prof");
+        if (usersService.updatePassword(login,lastPassword,password)){
+            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
         }
         else {
             //response.sendRedirect(request.getContextPath() + "/registration");

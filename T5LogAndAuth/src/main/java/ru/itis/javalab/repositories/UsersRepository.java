@@ -7,6 +7,7 @@ import java.util.UUID;
 
 public interface UsersRepository extends CrudRepository<User> {
     List<User> findAllByAge (int age);
-    User findByLogAndPassword (String log,String password);
+    User findByLog (String log);
+    void updatePassword(User u);
 
 }

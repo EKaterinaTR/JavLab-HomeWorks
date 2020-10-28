@@ -1,5 +1,7 @@
 package ru.itis.javalab.services;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ru.itis.javalab.models.User;
 import ru.itis.javalab.repositories.UsersRepository;
 
@@ -16,9 +18,11 @@ import java.util.UUID;
 public class UsersServiceImpl implements UsersService {
 
     private UsersRepository usersRepository;
+    private PasswordEncoder passwordEncoder;
 
-    public UsersServiceImpl(UsersRepository usersRepository) {
+    public UsersServiceImpl(UsersRepository usersRepository,PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -27,12 +31,28 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public User getUserBy(String log, String password) {
-        return usersRepository.findByLogAndPassword(log,password);
+    public User signIn(String log, String password) {
+        User user = usersRepository.findByLog(log);
+        //System.out.println(user == null);
+        if(user != null && passwordEncoder.matches(password,user.getHashPassword())){
+            return user;
+        }
+//        System.out.println(user);
+//        if(user != null && user.getHashPassword().equals(password)){
+//            return user;
+//        }
+        return null;
     }
 
     @Override
-    public boolean authentication(String log, String password) {
-        return (getUserBy(log,password)!= null);
+    public boolean updatePassword(String login, String lastPassword, String newPassword) {
+       User user = signIn(login,lastPassword);
+       if(user != null) {
+           user.setHashPassword(passwordEncoder.encode(newPassword));
+           usersRepository.updatePassword(user);
+           return true;
+       }
+       return false;
     }
+
 }

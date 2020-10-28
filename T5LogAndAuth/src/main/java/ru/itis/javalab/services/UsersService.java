@@ -7,8 +7,9 @@ import java.util.List;
 
 public interface UsersService {
     List<User> getAllUsers();
-    User getUserBy(String log,String password);
-    boolean authentication(String log,String password);
+    User signIn(String log, String password);
+    boolean updatePassword(String login,String lastPassword, String newPassword);
+
 
 
 }
