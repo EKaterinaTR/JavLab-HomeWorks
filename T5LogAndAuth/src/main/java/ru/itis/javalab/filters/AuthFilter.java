@@ -1,4 +1,5 @@
 package ru.itis.javalab.filters;
+
 import ru.itis.javalab.services.CookiesService;
 
 
@@ -13,7 +14,8 @@ import java.io.IOException;
 public class AuthFilter implements Filter {
     private CookiesService cookiesService;
     private final String AUTH = "Auth";
-    private final String PATH ="/login";
+    private final String PATH = "/login";
+
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         ServletContext servletContext = filterConfig.getServletContext();
@@ -27,23 +29,22 @@ public class AuthFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse)servletResponse;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         Cookie[] cookies = request.getCookies();
         Cookie cookie = null;
-        if(cookies !=null) {
-            for(Cookie c: cookies) {
-                if(AUTH.equals(c.getName())) {
+        if (cookies != null) {
+            for (Cookie c : cookies) {
+                if (AUTH.equals(c.getName())) {
                     cookie = c;
                     break;
                 }
             }
         }
 
-        if(cookie != null && cookiesService.hasThisCookie(cookie.getValue())){
+        if (cookie != null && cookiesService.hasThisCookie(cookie.getValue())) {
             filterChain.doFilter(servletRequest, servletResponse);
-        }
-        else {
+        } else {
             response.sendRedirect(request.getContextPath() + PATH);
         }
 

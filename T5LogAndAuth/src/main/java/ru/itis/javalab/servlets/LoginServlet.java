@@ -20,20 +20,21 @@ public class LoginServlet extends HttpServlet {
     private CookiesService cookiesService;
 
     @Override
-    public void init (ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         ServletContext servletContext = config.getServletContext();
         this.cookiesService = (CookiesService) servletContext.getAttribute("cookiesService");
 
 
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        UUID uuid = new UUID(99,2222);
+        UUID uuid = new UUID(99, 2222);
         String sUUID = uuid.randomUUID().toString();
-        Cookie cookie = new Cookie("Auth",sUUID);
+        Cookie cookie = new Cookie("Auth", sUUID);
         response.addCookie(cookie);
 
-        cookiesService.addNewCookie(10L,sUUID);
+        cookiesService.addNewCookie(10L, sUUID);
 
         System.out.println("there");
 

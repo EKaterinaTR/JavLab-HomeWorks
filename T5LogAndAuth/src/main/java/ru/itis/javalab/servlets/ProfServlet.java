@@ -18,7 +18,7 @@ public class ProfServlet extends HttpServlet {
     private UsersService usersService;
 
     @Override
-    public void init (ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         ServletContext servletContext = config.getServletContext();
         this.usersService = (UsersService) servletContext.getAttribute("usersService");
 

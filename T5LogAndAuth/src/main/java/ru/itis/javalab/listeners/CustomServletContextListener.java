@@ -33,7 +33,6 @@ import java.util.Properties;
 public class CustomServletContextListener implements ServletContextListener {
 
 
-
     @Override
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         ServletContext servletContext = servletContextEvent.getServletContext();

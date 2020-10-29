@@ -20,7 +20,7 @@ public class UsersServiceImpl implements UsersService {
     private UsersRepository usersRepository;
     private PasswordEncoder passwordEncoder;
 
-    public UsersServiceImpl(UsersRepository usersRepository,PasswordEncoder passwordEncoder) {
+    public UsersServiceImpl(UsersRepository usersRepository, PasswordEncoder passwordEncoder) {
         this.usersRepository = usersRepository;
         this.passwordEncoder = passwordEncoder;
     }
@@ -34,7 +34,7 @@ public class UsersServiceImpl implements UsersService {
     public User signIn(String log, String password) {
         User user = usersRepository.findByLog(log);
         //System.out.println(user == null);
-        if(user != null && passwordEncoder.matches(password,user.getHashPassword())){
+        if (user != null && passwordEncoder.matches(password, user.getHashPassword())) {
             return user;
         }
 //        System.out.println(user);
@@ -46,13 +46,13 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public boolean updatePassword(String login, String lastPassword, String newPassword) {
-       User user = signIn(login,lastPassword);
-       if(user != null) {
-           user.setHashPassword(passwordEncoder.encode(newPassword));
-           usersRepository.updatePassword(user);
-           return true;
-       }
-       return false;
+        User user = signIn(login, lastPassword);
+        if (user != null) {
+            user.setHashPassword(passwordEncoder.encode(newPassword));
+            usersRepository.updatePassword(user);
+            return true;
+        }
+        return false;
     }
 
 }

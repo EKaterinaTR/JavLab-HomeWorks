@@ -3,6 +3,7 @@ package ru.itis.javalab.servlets;
 import ru.itis.javalab.models.User;
 import ru.itis.javalab.services.CookiesService;
 import ru.itis.javalab.services.UsersService;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -19,7 +20,7 @@ public class Login2Servlet extends HttpServlet {
     private UsersService usersService;
 
     @Override
-    public void init (ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
         //надо ли ловить ошибки ?
         ServletContext servletContext = config.getServletContext();
         this.cookiesService = (CookiesService) servletContext.getAttribute("cookiesService");
@@ -27,6 +28,7 @@ public class Login2Servlet extends HttpServlet {
 
 
     }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -40,13 +42,12 @@ public class Login2Servlet extends HttpServlet {
 
         String login = request.getParameter("login");
         String password = request.getParameter("password");
-        User user = usersService.signIn(login,password);
-        if (user != null){
-            cookiesService.addNewCookie(user.getId(),request.getSession().getId());
+        User user = usersService.signIn(login, password);
+        if (user != null) {
+            cookiesService.addNewCookie(user.getId(), request.getSession().getId());
             System.out.println("there2");
             response.sendRedirect(request.getContextPath() + "/enter/prof");
-        }
-        else {
+        } else {
             //response.sendRedirect(request.getContextPath() + "/registration");
             System.out.println("login or password are uncorrected");
         }

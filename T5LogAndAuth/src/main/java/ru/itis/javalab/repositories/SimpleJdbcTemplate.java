@@ -9,10 +9,12 @@ import java.util.List;
 public class SimpleJdbcTemplate {
 
     private DataSource dataSource;
+
     SimpleJdbcTemplate(DataSource source) {
         dataSource = source;
     }
-    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object ... args) {
+
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper, Object... args) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         ResultSet resultSet = null;
@@ -21,8 +23,8 @@ public class SimpleJdbcTemplate {
             connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sql);
             int i = 1;
-            for(Object o : args){
-                preparedStatement.setObject(i,o);
+            for (Object o : args) {
+                preparedStatement.setObject(i, o);
                 i++;
             }
             resultSet = preparedStatement.executeQuery();
@@ -62,7 +64,7 @@ public class SimpleJdbcTemplate {
 
     }
 
-    public void queryWithoutAnswer(String sql, Object ... args) {
+    public void queryWithoutAnswer(String sql, Object... args) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
 
@@ -71,8 +73,8 @@ public class SimpleJdbcTemplate {
             connection = dataSource.getConnection();
             preparedStatement = connection.prepareStatement(sql);
             int i = 1;
-            for(Object o : args){
-                preparedStatement.setObject(i,o);
+            for (Object o : args) {
+                preparedStatement.setObject(i, o);
                 i++;
             }
             preparedStatement.executeUpdate();

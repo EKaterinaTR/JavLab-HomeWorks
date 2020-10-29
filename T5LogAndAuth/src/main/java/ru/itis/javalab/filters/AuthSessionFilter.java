@@ -1,4 +1,5 @@
 package ru.itis.javalab.filters;
+
 import ru.itis.javalab.services.CookiesService;
 
 
@@ -11,13 +12,12 @@ import java.io.IOException;
 @WebFilter("/enter/*")
 public class AuthSessionFilter implements Filter {
     private CookiesService cookiesService;
-    private final String PATH ="/login2";
+    private final String PATH = "/login2";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         ServletContext servletContext = filterConfig.getServletContext();
         this.cookiesService = (CookiesService) servletContext.getAttribute("cookiesService");
-
 
     }
 
@@ -27,12 +27,11 @@ public class AuthSessionFilter implements Filter {
             throws IOException, ServletException {
 
         HttpServletRequest request = (HttpServletRequest) servletRequest;
-        HttpServletResponse response = (HttpServletResponse)servletResponse;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if(cookiesService.hasThisCookie(((HttpServletRequest) servletRequest).getSession().getId())){
+        if (cookiesService.hasThisCookie(((HttpServletRequest) servletRequest).getSession().getId())) {
             filterChain.doFilter(servletRequest, servletResponse);
-        }
-        else {
+        } else {
             response.sendRedirect(request.getContextPath() + PATH);
         }
 

@@ -22,6 +22,7 @@ public class CookiesRepositoryJdbcImpl implements CookiesRepository {
         this.dataSource = dataSource;
         simpleJdbcTemplate = new SimpleJdbcTemplate(dataSource);
     }
+
     @Override
     public Boolean findAnyByCookie(String uuid) {
         return !(simpleJdbcTemplate.query(SQL_FIND_ANY_BY_COOKIE, userRowMapper, uuid).isEmpty());
@@ -30,7 +31,7 @@ public class CookiesRepositoryJdbcImpl implements CookiesRepository {
     @Override
     public void addCookieToUserById(Long id, String cookie) {
 
-        simpleJdbcTemplate.queryWithoutAnswer(SQL_UPDATE_COOKIE,id,id,cookie);
+        simpleJdbcTemplate.queryWithoutAnswer(SQL_UPDATE_COOKIE, id, id, cookie);
 
     }
 }

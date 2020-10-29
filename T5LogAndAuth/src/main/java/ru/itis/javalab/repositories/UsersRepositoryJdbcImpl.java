@@ -48,7 +48,6 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     }
 
 
-
     @Override
     public void save(User entity) {
 
@@ -72,7 +71,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
     @Override
     public List<User> findAll() {
 
-        return simpleJdbcTemplate.query(SQL_FIND_ALL,userRowMapper);
+        return simpleJdbcTemplate.query(SQL_FIND_ALL, userRowMapper);
 
 
     }
@@ -86,8 +85,8 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
     @Override
     public User findByLog(String log) {
-        List<User> list = simpleJdbcTemplate.query(SQL_FIND_BY_LOG,userRowMapper,log);
-        if(list != null && list.size() == 1) {
+        List<User> list = simpleJdbcTemplate.query(SQL_FIND_BY_LOG, userRowMapper, log);
+        if (list != null && list.size() == 1) {
             return list.get(0);
         }
         return null;
@@ -95,7 +94,7 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
 
     @Override
     public void updatePassword(User u) {
-           simpleJdbcTemplate.queryWithoutAnswer(SQL_UPDATE_PASSWORD,u.getHashPassword(),u.getId());
+        simpleJdbcTemplate.queryWithoutAnswer(SQL_UPDATE_PASSWORD, u.getHashPassword(), u.getId());
     }
 
 
