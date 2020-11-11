@@ -1,21 +1,21 @@
 package ru.itis.javalab;
 
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-import ru.itis.javalab.repositories.SimpleJdbcTemplate;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Optional;
 
 public class EntityManager {
-    SimpleJdbcTemplate simpleJdbcTemplate;
+    JdbcTemplate jdbcTemplate ;
 
-    public EntityManager(SimpleJdbcTemplate simpleJdbcTemplate) {
-        this.simpleJdbcTemplate = simpleJdbcTemplate;
+    public EntityManager(JdbcTemplate j) {
+        this.jdbcTemplate = j;
     }
 
 
     public <T> void createTable(String tableName, Class<T> entityClass) {
-        simpleJdbcTemplate.queryWithoutAnswer(getSqlCreateTable(tableName, entityClass));
+        jdbcTemplate.execute(getSqlCreateTable(tableName, entityClass));
 
     }
 
@@ -73,10 +73,7 @@ public class EntityManager {
 
 
     public void save(String tableName, Object entity) {
-        // сканируем его поля
-        // сканируем значения этих полей
-        // генерируем insert into
-        simpleJdbcTemplate.queryWithoutAnswer(getSqlInsert(tableName, entity));
+        jdbcTemplate.execute(getSqlInsert(tableName,entity));
     }
 
     private String getSqlInsert(String tableName, Object object) {
@@ -148,9 +145,7 @@ public class EntityManager {
 
 
     public <T, ID> T findById(String tableName, Class<T> resultType, Class<ID> idType, ID idValue) {
-
-        return simpleJdbcTemplate.query(getSQLFindById(tableName, idType, idValue),
-                getMapper(resultType)).get(0);
+        return jdbcTemplate.query(getSQLFindById(tableName, idType, idValue), getMapper(resultType)).get(0);
     }
 
     private <T> RowMapper<T> getMapper(Class<T> resultType) {
