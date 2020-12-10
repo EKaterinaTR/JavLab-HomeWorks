@@ -1,8 +1,14 @@
 package ru.itis.javalab.utils.formcreaters;
 
 import com.google.auto.service.AutoService;
+import freemarker.cache.FileTemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import freemarker.template.TemplateException;
 import ru.itis.javalab.utils.formcreaters.annotations.HtmlForm;
 import ru.itis.javalab.utils.formcreaters.annotations.HtmlInput;
+import ru.itis.javalab.utils.formcreaters.model.Form;
+import ru.itis.javalab.utils.formcreaters.model.Input;
 
 import javax.annotation.processing.AbstractProcessor;
 import javax.annotation.processing.Processor;
@@ -11,12 +17,12 @@ import javax.annotation.processing.SupportedAnnotationTypes;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.TypeElement;
 import javax.tools.Diagnostic;
-import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Set;
+import java.util.*;
 
 
 @AutoService(Processor.class)
@@ -26,40 +32,51 @@ public class HtmlProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
         // получить типы с аннотаций ru.itis.javalab.utils.formcreaters.annotations.HtmlForm
+
+        Configuration configuration = new Configuration(Configuration.VERSION_2_3_30);
+        configuration.setDefaultEncoding("UTF-8");
+        try {
+            configuration.setTemplateLoader(new FileTemplateLoader(new File("src/main/resources/ftlh")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(HtmlForm.class);
         Set<? extends Element> annotatedInputElements = roundEnv.getElementsAnnotatedWith(HtmlInput.class);
 
         for (Element element : annotatedElements) {
-            // получаем полный путь для генерации html
+
             String path = HtmlProcessor.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-            // ru.itis.javalab.models.User.class -> ru.itis.javalab.models.User.html
+
             path = path.substring(1) + element.getSimpleName().toString() + ".html";
             Path out = Paths.get(path);
             try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(out.toFile()));
+               Template template = configuration.getTemplate("form.ftlh");
                 HtmlForm annotation = element.getAnnotation(HtmlForm.class);
-                writer.write("<form action='" + annotation.action() + "' method='" + annotation.method() + "'/>");
-                writer.newLine();
-                element.getAnnotation(HtmlInput.class);
+                Form form = new Form(annotation.action(),annotation.method());
+                List inputs = new LinkedList();
                 for (Element el: annotatedInputElements) {
                     if(el.getEnclosingElement().equals(element)) {
                         HtmlInput inputAnnotation = el.getAnnotation(HtmlInput.class);
-                        //type="text" name="nickname" placeholder="Ваш ник">
-                        writer.write("<input type= \"" + inputAnnotation.type() + "\" name = \""+
-                                inputAnnotation.name()+ "\" placeholder=\""+inputAnnotation.placeholder() +"\" >");
+                        inputs.add(new Input(inputAnnotation.type(),inputAnnotation.name(),inputAnnotation.placeholder()));
                     }
 
                 }
-
-                writer.newLine();
-                writer.write("</form>");
-                writer.close();
-            } catch (IOException e) {
+                Map<String, Object> attributes = new HashMap<>();
+                attributes.put("form", form);
+                attributes.put("inputs", inputs);
+                FileWriter fileWriter = new FileWriter(out.toFile());
+                template.process(attributes, fileWriter);
+            } catch (Exception  e) {
 
                 throw new IllegalStateException(e);
             }
-
+//
         }
         return true;
     }
+//
+
+
+
 }
