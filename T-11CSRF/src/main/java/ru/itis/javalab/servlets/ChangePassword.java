@@ -40,7 +40,7 @@ public class ChangePassword extends HttpServlet {
         String lastPassword = request.getParameter("last_password");
         String password = request.getParameter("password");
         if (usersService.updatePassword(login, lastPassword, password)) {
-            request.getRequestDispatcher("/jsp/login.jsp").forward(request, response);
+            response.sendRedirect(request.getContextPath()+"/enter/prof");
         } else {
             System.out.println("login or password are uncorrected");
         }
