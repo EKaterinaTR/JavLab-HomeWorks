@@ -2,12 +2,13 @@ package ru.itis.javalab;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Optional;
 
 public class EntityManager {
-    JdbcTemplate jdbcTemplate ;
+    JdbcTemplate jdbcTemplate;
 
     public EntityManager(JdbcTemplate j) {
         this.jdbcTemplate = j;
@@ -58,6 +59,14 @@ public class EntityManager {
             case "String":
                 type = " varchar";
                 break;
+            case "Float":
+            case "float":
+                type = " real";
+                break;
+            case "Double":
+            case "double":
+                type = " double precision";
+                break;
             default:
                 Optional<Field> field1 = Arrays.stream(field.getClass().getFields())
                         .filter(x -> x.getName().equals("id") || x.getName().equals("ID"))
@@ -73,7 +82,7 @@ public class EntityManager {
 
 
     public void save(String tableName, Object entity) {
-        jdbcTemplate.execute(getSqlInsert(tableName,entity));
+        jdbcTemplate.execute(getSqlInsert(tableName, entity));
     }
 
     private String getSqlInsert(String tableName, Object object) {
@@ -127,6 +136,10 @@ public class EntityManager {
             case "int":
             case "boolean":
             case "Boolean":
+            case "Float":
+            case "float":
+            case "Double":
+            case "double":
                 break;
             case "String":
                 value = "\'" + value + "\'";
@@ -163,6 +176,9 @@ public class EntityManager {
             for (Field field : resultType.getDeclaredFields()) {
                 field.setAccessible(true);
                 try {
+                    /*TODO: сделать совместимость с непримитивными типами данных или
+                    убрать совместимость с н тип в других местах
+                     */
                     field.set(entity, row.getObject(field.getName().toLowerCase()));
                 } catch (IllegalAccessException e) {
                     throw new IllegalStateException(e);

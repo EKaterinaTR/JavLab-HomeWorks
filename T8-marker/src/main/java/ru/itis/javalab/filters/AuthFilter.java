@@ -14,7 +14,7 @@ import java.io.IOException;
 public class AuthFilter implements Filter {
     private CookiesService cookiesService;
     private final String AUTH = "Auth";
-    private final String PATH = "login";
+    private final String PATH = "/login";
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -44,7 +44,7 @@ public class AuthFilter implements Filter {
         if (cookie != null && cookiesService.hasThisCookie(cookie.getValue())) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
-            response.sendRedirect( PATH);
+            response.sendRedirect( request.getContextPath() + PATH);
         }
 
     }
