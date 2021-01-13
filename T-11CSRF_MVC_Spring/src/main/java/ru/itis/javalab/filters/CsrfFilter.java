@@ -1,7 +1,6 @@
 package ru.itis.javalab.filters;
 
 import javax.servlet.*;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,7 +26,7 @@ public class CsrfFilter implements Filter {
             String requestCsrf = request.getParameter("_csrf_token");
             Set<String> sessionCsrf = (Set<String>) request.getSession(false).getAttribute("_csrf_token");
             if (sessionCsrf.contains(requestCsrf)) {
-                System.out.println("I work" + requestCsrf);
+                System.out.println("I work");
                 filterChain.doFilter(request,response);
                 return;
             } else {
@@ -36,7 +35,6 @@ public class CsrfFilter implements Filter {
             }
         }
         if (request.getMethod().equals("GET")) {
-//            System.out.println("Get");
             String csrf = UUID.randomUUID().toString();
             Set<String> setCSFR;
             if(request.getSession().getAttribute("_csrf_token") != null) {
@@ -50,9 +48,8 @@ public class CsrfFilter implements Filter {
             setCSFR.add(csrf);
             request.setAttribute("_csrf_token", csrf);
             request.getSession().setAttribute("_csrf_token", setCSFR);
-//            System.out.println("Get-end");
+
         }
-//        System.out.println("chang");
         filterChain.doFilter(servletRequest, servletResponse);
     }
 

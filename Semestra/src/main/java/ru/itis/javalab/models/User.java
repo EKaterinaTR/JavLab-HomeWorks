@@ -1,7 +1,10 @@
 package ru.itis.javalab.models;
 
-public class User {
-    Long id;
+import lombok.Getter;
+
+@Getter
+public class User extends People {
     String login;
+
 
 }
