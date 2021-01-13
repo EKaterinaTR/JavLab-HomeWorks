@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Авторизация</title>
+    <title>Ошибка</title>
 </head>
 <body>
 <div>
@@ -12,7 +12,8 @@
     <form method="get" action="enter">
         <input type="submit" value="Попробовать ещё раз">
     </form>
-    <form method="get" action="registration">
+
+    <form method="get" action="sign">
         <input type="submit" value="зарегистрироваться">
     </form>
 </div>
