@@ -9,8 +9,14 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
+import ru.itis.javalab.repositories.UsersRepository;
+import ru.itis.javalab.repositories.UsersRepositoryJdbcTemplateImpl;
+import ru.itis.javalab.services.UsersService;
+import ru.itis.javalab.services.UsersServiceImpl;
 //import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 //import org.springframework.security.crypto.password.PasswordEncoder;
 //import ru.itis.javalab.repositories.CookiesRepository;
@@ -34,25 +40,25 @@ public class ApplicationConfig {
     @Autowired
     private Environment environment;
 
-//    @Bean
-//    public UsersService usersService() {
-//        return new UsersServiceImpl(usersRepository(), passwordEncoder());
-//    }
+    @Bean
+    public UsersService usersService() {
+        return new UsersServiceImpl(usersRepository(), passwordEncoder());
+    }
 //
 //    @Bean
 //    public CookiesService cookiesService() {
 //        return new CookiesServiceImpl(cookiesRepository());
 //    }
 //
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
-//
-//    @Bean
-//    public UsersRepository usersRepository() {
-//        return new UsersRepositoryJdbcImpl(dataSource());
-//    }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public UsersRepository usersRepository() {
+        return new UsersRepositoryJdbcTemplateImpl(dataSource());
+    }
 //
 //    @Bean
 //    public CookiesRepository cookiesRepository() {

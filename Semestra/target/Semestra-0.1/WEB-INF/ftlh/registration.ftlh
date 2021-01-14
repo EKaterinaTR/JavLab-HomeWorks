@@ -10,7 +10,7 @@
 <body>
 <div>
     <form id="reg" method="post" action="">
-        <input type="text" name="login" placeholder="Логин">
+        <input id = "log" type="text" name="login" placeholder="Логин">
         <input id = "pass" type="password" name="password" placeholder="Пароль">
     </form>
     <input id="pass2" type="password" name="password2" placeholder="Пароль">
@@ -21,17 +21,34 @@
         async function signUp() {
             if (document.getElementById("pass").value
                 == document.getElementById("pass2").value) {
-                let response = await fetch("http://localhost:8080" + "<@spring.url '/ex'/>");
+                let response = await fetch("http://localhost:8080" + "<@spring.url '/sign'/>", {
+                    method: 'POST',
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    credentials: 'same-origin',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    redirect: 'follow',
+                    referrerPolicy: 'no-referrer',
+                    body: JSON.stringify( {
+                        password:document.getElementById("pass").value,
+                    login:document.getElementById("log").value})
+                });
+                alert("получили json ответ")
                 if (response.ok) {
+                    alert("статус норм");
                     let json = await response.json();
+                    alert("gjkexbkb json")
+                    alert(json)
                     if (json.same) {
                         document.getElementById("mistake").innerText = "Логин занят, выберете другой.";
                     }
                     else {
-                        let response2 = await fetch("http://localhost:8080" + "<@spring.url '/ex2'/>");
-                        window.location.href = response2.headers.get("Location");
+                        document.getElementById("mistake").innerText = "pfh";
+                        document.getElementById("mistake").innerText = json.location;
 
-
+                        location.href =  json.location;
                     }
                 } else {
                     alert("Ошибка HTTP: " + response.status);

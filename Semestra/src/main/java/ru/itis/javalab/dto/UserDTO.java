@@ -1,20 +1,33 @@
 package ru.itis.javalab.dto;
 
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@ToString
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-
 public class UserDTO {
-    String login;
-    String password;
+    private String login;
+    private String password;
 
-    public UserDTO(String login,String password){
-        this.login = login;
-        this.password = password;
-    }
+
+//    public static UserDTO from(User user) {
+//        if (user == null) {
+//            return null;
+//        }
+//        return UserDTO.builder()
+//                .login(user.getFirstName())
+//                .lastName(user.getLastName())
+//                .build();
+//    }
+//
+//    public static List<UserDto> from(List<User> users) {
+//        return users.stream()
+//                .map(UserDto::from)
+//                .collect(Collectors.toList());
+//    }
+
 }

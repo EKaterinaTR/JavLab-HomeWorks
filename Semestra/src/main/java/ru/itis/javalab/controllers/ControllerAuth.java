@@ -6,8 +6,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.javalab.dto.UserDTO;
 import ru.itis.javalab.models.User;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import ru.itis.javalab.services.UsersService;
+
+
 
 
 @Controller
@@ -15,7 +16,7 @@ public class ControllerAuth {
 
 
     @Autowired
-
+    UsersService usersService;
 
 
     @RequestMapping(value = "/enter", method = RequestMethod.GET)
@@ -34,23 +35,43 @@ public class ControllerAuth {
         return "registration";
     }
 
-    @RequestMapping(value = "/sign", method = RequestMethod.POST)
-    public String SignUp (UserDTO user) {
 
-        return "registration";
-    }
-
-    @RequestMapping(value = "/ex", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/sign", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
     @ResponseBody
-    public String ex (HttpServletRequest request,HttpServletResponse response) {
-        System.out.println("work");
-        return "{\"same\" : false }" ;
+    public String signUp (@RequestBody UserDTO userDTO) {
+        System.out.println("начали дто");
+        System.out.println(userDTO);
+        if (usersService.signUp(userDTO)){
+            //usersService.signIn(userDTO);
+           //TODO:решить проблему с нечтением данного джесона в js
+            return "{\"same\" : false, \"location\" : \"\\profile\" }" ;
+
+        }
+        else {
+            return "{\"same\" : true }" ;
+        }
+
     }
 
-    @RequestMapping(value = "/ex2", method = RequestMethod.GET)
-    public String ex2() {
-        return "redirect:/enter";
-    }
+//    @RequestMapping(value = "/get", method = RequestMethod.GET)
+//    public String open() {
+//        UserDTO userDTO = new UserDTO("ll","ll");
+//        System.out.println(" начиспользую юзер сервис");
+//        if (usersService.signUp(userDTO)){
+//            usersService.signIn(userDTO);
+//
+//
+//        }
+//        else {
+//
+//        }
+//        return "enter";
+//    }
+
+
+
 
 
 

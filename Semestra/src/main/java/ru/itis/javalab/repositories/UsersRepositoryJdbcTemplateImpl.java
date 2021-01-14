@@ -6,12 +6,13 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import ru.itis.javalab.dto.UserDTO;
 import ru.itis.javalab.models.User;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
-public class UsersRepositoryJdbcTemplateImpl implements UserRepository {
+public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -20,10 +21,11 @@ public class UsersRepositoryJdbcTemplateImpl implements UserRepository {
             "insert into users(login, name, biography, link_to_image, hash_password ) " +
                     "values (:login, :name, :biography, :link_to_image, :hash_password )";
 
+
     //language=SQL
-    private static final String SQL_SELECT_BY_ID = "select * from account where id = ?";
+    private static final String SQL_SELECT_BY_ID = "select * from users where id = ?";
     //language=SQL
-    private static final String SQL_SELECT_BY_LOGIN = "select * from account where login = ?";
+    private static final String SQL_SELECT_BY_LOGIN = "select * from users where login = ?";
 
 
 
@@ -90,11 +92,13 @@ public class UsersRepositoryJdbcTemplateImpl implements UserRepository {
     public Optional<User> findByLogin(String login) {
         User user;
         try {
-            user = namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(SQL_SELECT_BY_ID, userRowMapper, login);
+            user = namedParameterJdbcTemplate.getJdbcTemplate().queryForObject(SQL_SELECT_BY_LOGIN, userRowMapper, login);
         } catch (EmptyResultDataAccessException e) {
             user = null;
         }
 
         return Optional.ofNullable(user);
     }
+
+
 }
