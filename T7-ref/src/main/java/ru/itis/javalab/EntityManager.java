@@ -68,14 +68,8 @@ public class EntityManager {
                 type = " double precision";
                 break;
             default:
-                Optional<Field> field1 = Arrays.stream(field.getClass().getFields())
-                        .filter(x -> x.getName().equals("id") || x.getName().equals("ID"))
-                        .findAny();
-                if (field1.isPresent()) {
-                    type = getType(field1.get());
-                } else {
-                    type = " varchar";
-                }
+                type = " varchar";
+
         }
         return type;
     }
@@ -142,15 +136,9 @@ public class EntityManager {
             case "double":
                 break;
             case "String":
+            default:
                 value = "\'" + value + "\'";
                 break;
-            default:
-                Optional<Field> field1 = Arrays.stream(field.getClass().getFields())
-                        .filter(x -> x.getName().equals("id") || x.getName().equals("ID"))
-                        .findAny();
-                if (!field1.isPresent()) {
-                    value = "\'" + value + "\'";
-                }
 
         }
         return value;
@@ -176,9 +164,6 @@ public class EntityManager {
             for (Field field : resultType.getDeclaredFields()) {
                 field.setAccessible(true);
                 try {
-                    /*TODO: сделать совместимость с непримитивными типами данных или
-                    убрать совместимость с н тип в других местах
-                     */
                     field.set(entity, row.getObject(field.getName().toLowerCase()));
                 } catch (IllegalAccessException e) {
                     throw new IllegalStateException(e);
