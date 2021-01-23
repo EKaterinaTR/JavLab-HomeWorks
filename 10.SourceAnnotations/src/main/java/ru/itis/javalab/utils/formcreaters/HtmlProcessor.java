@@ -42,7 +42,6 @@ public class HtmlProcessor extends AbstractProcessor {
         }
 
         Set<? extends Element> annotatedElements = roundEnv.getElementsAnnotatedWith(HtmlForm.class);
-        Set<? extends Element> annotatedInputElements = roundEnv.getElementsAnnotatedWith(HtmlInput.class);
 
         for (Element element : annotatedElements) {
 
@@ -51,23 +50,28 @@ public class HtmlProcessor extends AbstractProcessor {
             path = path.substring(1) + element.getSimpleName().toString() + ".html";
             Path out = Paths.get(path);
             try {
-               Template template = configuration.getTemplate("form.ftlh");
+                Template template = configuration.getTemplate("form.ftlh");
                 HtmlForm annotation = element.getAnnotation(HtmlForm.class);
-                Form form = new Form(annotation.action(),annotation.method());
-                List inputs = new LinkedList();
-                for (Element el: annotatedInputElements) {
-                    if(el.getEnclosingElement().equals(element)) {
-                        HtmlInput inputAnnotation = el.getAnnotation(HtmlInput.class);
-                        inputs.add(new Input(inputAnnotation.type(),inputAnnotation.name(),inputAnnotation.placeholder()));
-                    }
+                Form form = new Form(annotation.action(), annotation.method());
 
+                List inputs = new LinkedList();
+                List<? extends Element> elements = element.getEnclosedElements();
+
+
+                for (Element el : elements) {
+                    HtmlInput inputAnnotation = el.getAnnotation(HtmlInput.class);
+                    if (inputAnnotation != null) {
+                        inputs.add(new Input(inputAnnotation.type(), inputAnnotation.name(), inputAnnotation.placeholder()));
+                    }
                 }
+
                 Map<String, Object> attributes = new HashMap<>();
                 attributes.put("form", form);
                 attributes.put("inputs", inputs);
                 FileWriter fileWriter = new FileWriter(out.toFile());
                 template.process(attributes, fileWriter);
-            } catch (Exception  e) {
+
+            } catch (Exception e) {
 
                 throw new IllegalStateException(e);
             }
@@ -76,7 +80,6 @@ public class HtmlProcessor extends AbstractProcessor {
         return true;
     }
 //
-
 
 
 }
