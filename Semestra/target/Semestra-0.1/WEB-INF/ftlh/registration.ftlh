@@ -40,15 +40,13 @@
                     alert("статус норм");
                     let json = await response.json();
                     alert("gjkexbkb json")
-                    alert(json)
                     if (json.same) {
+                        alert("if")
                         document.getElementById("mistake").innerText = "Логин занят, выберете другой.";
                     }
                     else {
-                        document.getElementById("mistake").innerText = "pfh";
-                        document.getElementById("mistake").innerText = json.location;
-
-                        location.href =  json.location;
+                        alert("else");
+                        location.href =  json.l;
                     }
                 } else {
                     alert("Ошибка HTTP: " + response.status);

@@ -46,7 +46,7 @@ public class ControllerAuth {
         if (usersService.signUp(userDTO)){
             //usersService.signIn(userDTO);
            //TODO:решить проблему с нечтением данного джесона в js
-            return "{\"same\" : false, \"location\" : \"\\profile\" }" ;
+            return "{\"same\" : false, \"l\" : \"profile\" }" ;
 
         }
         else {

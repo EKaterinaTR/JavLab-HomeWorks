@@ -7,7 +7,7 @@ import ru.itis.javalab.dto.UserDTO;
 
 @Controller
 public class ControllerProfile {
-    @RequestMapping(value = "/profile", method = RequestMethod.POST)
+    @RequestMapping(value = "/profile", method = RequestMethod.GET)
     public String SignIn (UserDTO user) {
         if(true) {}
         return "wrong";

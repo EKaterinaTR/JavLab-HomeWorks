@@ -35,20 +35,14 @@
                         password:document.getElementById("pass").value,
                     login:document.getElementById("log").value})
                 });
-                alert("получили json ответ")
+
                 if (response.ok) {
-                    alert("статус норм");
                     let json = await response.json();
-                    alert("gjkexbkb json")
-                    alert(json)
                     if (json.same) {
                         document.getElementById("mistake").innerText = "Логин занят, выберете другой.";
                     }
                     else {
-                        document.getElementById("mistake").innerText = "pfh";
-                        document.getElementById("mistake").innerText = json.location;
-
-                        location.href =  json.location;
+                        location.href =  json.l;
                     }
                 } else {
                     alert("Ошибка HTTP: " + response.status);
