@@ -6,20 +6,21 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import ru.itis.javalab.dto.UserDTO;
+import org.springframework.stereotype.Repository;
 import ru.itis.javalab.models.User;
 import javax.sql.DataSource;
 import java.util.List;
 import java.util.Optional;
 
+@Repository
 public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     //language=SQL
     private static final String SQL_SAVE =
-            "insert into users(login, name, biography, link_to_image, hash_password ) " +
-                    "values (:login, :name, :biography, :link_to_image, :hash_password )";
+            "insert into users(login, name, biography, link_to_image, hash_password,email ) " +
+                    "values (:login, :name, :biography, :link_to_image, :hash_password,:email )";
 
 
     //language=SQL
@@ -36,6 +37,7 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
             .biography(row.getString("biography"))
             .linkToImage(row.getString("link_to_image"))
             .hashOfpassword(row.getString("hash_password"))
+            .email("email")
             .build();
 
 
@@ -52,7 +54,8 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
                 .addValue("hash_password",entity.getHashOfpassword())
                 .addValue("name",entity.getName())
                 .addValue("biography",entity.getBiography())
-                .addValue("link_to_image",entity.getLinkToImage());
+                .addValue("link_to_image",entity.getLinkToImage())
+                .addValue("email",entity.getEmail());
         namedParameterJdbcTemplate.update(SQL_SAVE,parameters,keyHolder, new String[]{"id"});
 
         entity.setId(keyHolder.getKey().longValue());

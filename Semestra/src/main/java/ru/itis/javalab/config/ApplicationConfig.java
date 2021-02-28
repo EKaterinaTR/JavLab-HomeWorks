@@ -3,34 +3,28 @@ package ru.itis.javalab.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import freemarker.template.TemplateExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
+import org.springframework.core.io.ClassRelativeResourceLoader;
+import org.springframework.core.io.support.ResourcePropertySource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.ui.freemarker.SpringTemplateLoader;
+import org.springframework.web.filter.CharacterEncodingFilter;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
-import ru.itis.javalab.repositories.UsersRepository;
-import ru.itis.javalab.repositories.UsersRepositoryJdbcTemplateImpl;
-import ru.itis.javalab.services.UsersService;
-import ru.itis.javalab.services.UsersServiceImpl;
-//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-//import org.springframework.security.crypto.password.PasswordEncoder;
-//import ru.itis.javalab.repositories.CookiesRepository;
-//import ru.itis.javalab.repositories.CookiesRepositoryJdbcImpl;
-//import ru.itis.javalab.repositories.UsersRepository;
-//import ru.itis.javalab.repositories.UsersRepositoryJdbcImpl;
-//import ru.itis.javalab.services.CookiesService;
-//import ru.itis.javalab.services.CookiesServiceImpl;
-//import ru.itis.javalab.services.UsersService;
-//import ru.itis.javalab.services.UsersServiceImpl;
-
+import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;;
 import javax.sql.DataSource;
-import java.io.File;
 import java.io.IOException;
+import java.util.Properties;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @Configuration
 @PropertySource("classpath:properties\\db.properties")
@@ -40,30 +34,45 @@ public class ApplicationConfig {
     @Autowired
     private Environment environment;
 
+
     @Bean
-    public UsersService usersService() {
-        return new UsersServiceImpl(usersRepository(), passwordEncoder());
+    public JavaMailSender javaMailSender()
+    {
+        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        org.springframework.core.env.PropertySource propertySource;
+        try {
+             propertySource =
+                    new ResourcePropertySource("classpath:properties/email.properties");
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
+        mailSender.setHost((String) propertySource.getProperty("spring.mail.host"));
+        mailSender.setPort(Integer.parseInt((String) propertySource.getProperty("spring.mail.port")));
+
+        mailSender.setUsername((String) propertySource.getProperty("spring.mail.username"));
+        mailSender.setPassword((String) propertySource.getProperty("spring.mail.password"));
+        mailSender.setDefaultEncoding("UTF-8");
+
+        Properties props = mailSender.getJavaMailProperties();
+
+        props.put("mail.smtp.starttls.enable",
+                (String) propertySource.getProperty("spring.mail.properties.mail.smtp.starttls.enable"));
+        props.put("mail.smtp.allow8bitmime",
+                (String) propertySource.getProperty("spring.mail.properties.mail.smtp.allow8bitmime"));
+        props.put("mail.smtp.ssl.trust",
+                (String) propertySource.getProperty("spring.mail.properties.mail.smtp.ssl.trust"));
+        props.put("mail.debug",
+                (String) propertySource.getProperty("spring.mail.properties.mail.debug"));
+        props.put("mail.mime.charset", "utf-8");
+        
+
+        return mailSender;
     }
-//
-//    @Bean
-//    public CookiesService cookiesService() {
-//        return new CookiesServiceImpl(cookiesRepository());
-//    }
-//
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public UsersRepository usersRepository() {
-        return new UsersRepositoryJdbcTemplateImpl(dataSource());
-    }
-//
-//    @Bean
-//    public CookiesRepository cookiesRepository() {
-//        return new CookiesRepositoryJdbcImpl(dataSource());
-//    }
 
     @Bean
     public DataSource dataSource() {
@@ -71,15 +80,9 @@ public class ApplicationConfig {
     }
 
 
-    @Bean // создали bean с id = objectMapper
-    public ObjectMapper objectMapper() {
-        return new ObjectMapper();
-    }
-
-
-
     @Bean
     public HikariConfig hikariConfig() {
+
         HikariConfig hikariConfig = new HikariConfig();
         hikariConfig.setJdbcUrl(environment.getProperty("db.url"));
         hikariConfig.setMaximumPoolSize(Integer.parseInt(environment.getProperty("db.hikari.max-pool-size")));
@@ -105,6 +108,32 @@ public class ApplicationConfig {
         return configurer;
     }
 
+    @Bean
+    public freemarker.template.Configuration configuration() {
+        freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_30);
+        configuration.setDefaultEncoding("UTF-8");
+        configuration.setTemplateLoader(
+                new SpringTemplateLoader(new ClassRelativeResourceLoader(this.getClass()),
+                        "/"));
+        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
+        return configuration;
+    }
+
+
+
+    @Bean
+    public CharacterEncodingFilter characterEncoding(){
+        CharacterEncodingFilter characterEncoding = new CharacterEncodingFilter();
+        characterEncoding.setEncoding("UTF-8");
+        characterEncoding.setForceEncoding(true);
+        return characterEncoding;
+    }
+
+
+    @Bean
+    public ExecutorService executorService() {
+        return Executors.newCachedThreadPool();
+    }
 
 
 }

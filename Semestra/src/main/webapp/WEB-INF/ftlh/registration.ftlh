@@ -9,49 +9,28 @@
 </head>
 <body>
 <div>
-    <form id="reg" method="post" action="">
-        <input id = "log" type="text" name="login" placeholder="Логин">
-        <input id = "pass" type="password" name="password" placeholder="Пароль">
+    <form id="reg" method="post" action="sign">
+        <input id="log" type="text" name="login" placeholder="Логин">
+        <input id="pass" type="password" name="password" placeholder="Пароль"onkeyup="checkPasswordMatch();">
+        <input type="email" name="email" placeholder="Email">
     </form>
-    <input id="pass2" type="password" name="password2" placeholder="Пароль">
-    <button type="button" class="btn btn-outline-primary" onclick="signUp()">Зарегистрироваться</button>
-    <p id ="mistake"></p>
+    <input id="pass2" type="password" name="password2" placeholder="Пароль"  onkeyup="checkPasswordMatch();">
+    <input id="submit" type="submit" value="зарегистрироваться" form="reg">
+    <p id="mistake"></p>
 
     <script>
-        async function signUp() {
+        function checkPasswordMatch() {
             if (document.getElementById("pass").value
                 == document.getElementById("pass2").value) {
-                let response = await fetch("http://localhost:8080" + "<@spring.url '/sign'/>", {
-                    method: 'POST',
-                    mode: 'cors',
-                    cache: 'no-cache',
-                    credentials: 'same-origin',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    redirect: 'follow',
-                    referrerPolicy: 'no-referrer',
-                    body: JSON.stringify( {
-                        password:document.getElementById("pass").value,
-                    login:document.getElementById("log").value})
-                });
+                document.getElementById("mistake").innerText = "";
+                document.getElementById("submit").disabled = false;
 
-                if (response.ok) {
-                    let json = await response.json();
-                    if (json.same) {
-                        document.getElementById("mistake").innerText = "Логин занят, выберете другой.";
-                    }
-                    else {
-                        location.href =  json.l;
-                    }
-                } else {
-                    alert("Ошибка HTTP: " + response.status);
-                }
             } else {
                 document.getElementById("mistake").innerText = "Пароли не совпадают";
+                document.getElementById("submit").disabled = true;
             }
-
         }
+
     </script>
 
 </div>
