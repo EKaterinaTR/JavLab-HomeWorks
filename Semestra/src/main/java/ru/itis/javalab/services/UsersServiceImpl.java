@@ -24,11 +24,11 @@ public class UsersServiceImpl implements UsersService {
     @Autowired
     private EmailUtil emailUtil;
 
-//    @Value("${server.url}")
-//    private String serverUrl;
-//
-//    @Value("${spring.mail.username}")
-//    private String from;
+    @Value("${server.url}")
+    private String serverUrl;
+
+    @Value("${spring.mail.username}")
+    private String from;
 
 
 
@@ -59,8 +59,8 @@ public class UsersServiceImpl implements UsersService {
                     .build();
             usersRepository.save(newUser);
 
-            String text = mailsGenerator.getMailForHello("Semestr");
-            emailUtil.sendMail(newUser.getEmail(), "Регистрация", "bookskaradim@gmail.com", text);
+            String text = mailsGenerator.getMailForHello(serverUrl);
+            emailUtil.sendMail(newUser.getEmail(), "Регистрация", from, text);
 
             return true;
         }

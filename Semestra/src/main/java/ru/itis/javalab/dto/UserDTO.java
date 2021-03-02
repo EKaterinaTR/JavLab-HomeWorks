@@ -2,6 +2,11 @@ package ru.itis.javalab.dto;
 
 import lombok.*;
 
+import ru.itis.javalab.validation.ValidPassword;
+
+
+import javax.validation.constraints.Email;
+
 @Getter
 @Setter
 @ToString
@@ -10,25 +15,16 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class UserDTO {
+
     private String login;
+    @ValidPassword(message = "{errors.password}")
     private String password;
+
+    @Email(message = "{errors.incorrect.email}")
     private String email;
 
 
-//    public static UserDTO from(User user) {
-//        if (user == null) {
-//            return null;
-//        }
-//        return UserDTO.builder()
-//                .login(user.getFirstName())
-//                .lastName(user.getLastName())
-//                .build();
-//    }
-//
-//    public static List<UserDto> from(List<User> users) {
-//        return users.stream()
-//                .map(UserDto::from)
-//                .collect(Collectors.toList());
-//    }
+
+
 
 }

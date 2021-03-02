@@ -8,6 +8,10 @@
 </head>
 <body>
 <div>
+    <h2><a href="?lang=ru">РУ</a> </h2>
+    <h2><a href="?lang=en">EN</a> </h2>
+</div>
+<div>
     <h2>Неправильный логин или пароль</h2>
     <form method="get" action="enter">
         <input type="submit" value="Попробовать ещё раз">

@@ -104,7 +104,7 @@ public class ApplicationConfig {
     @Bean
     public FreeMarkerConfigurer freemarkerConfig() {
         FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
-        configurer.setTemplateLoaderPath("/WEB-INF/ftlh/");
+        configurer.setTemplateLoaderPath("classpath:ftlh");
         return configurer;
     }
 

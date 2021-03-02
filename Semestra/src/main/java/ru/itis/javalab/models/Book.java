@@ -7,16 +7,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @Data
-public class Book extends UniqueEntity {
+@Builder
+public class Book  {
+    private Long id;
     private String name;
-    private String biography;
-    private String linkToImage;
+    private String description;
+    private String[] linksToImage;
+    private Integer year;
+    private WriterOrTranslator writer;
+    private WriterOrTranslator translator;
+    private Boolean isTranslation;
 
-    @Builder(builderMethodName = "bookBuilder")
-    public Book(Long id, String name, String biography, String linkToImage) {
-        super(id);
-        this.name = name;
-        this.biography = biography;
-        this.linkToImage = linkToImage;
-    }
 }
