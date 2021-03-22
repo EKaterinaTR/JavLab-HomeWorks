@@ -14,8 +14,16 @@ public class WriterOrTranslator extends People {
     List<Book> books;
 
 
+
     public WriterOrTranslator(Long id, String name, String biography, String linkToImage) {
         super(id, name, biography, linkToImage);
+    }
+    @Builder(builderMethodName = "writerBuilder")
+    public WriterOrTranslator(Long id, String name, String biography,
+                              String linkToImage,List<Book> books) {
+        super(id, name, biography, linkToImage);
+        this.books = books;
+
     }
 }
 

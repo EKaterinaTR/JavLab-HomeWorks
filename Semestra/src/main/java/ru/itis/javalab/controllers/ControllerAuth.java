@@ -42,8 +42,6 @@ public class ControllerAuth {
 
     @RequestMapping(value = "/sign", method = RequestMethod.POST)
     public String signUp(@Valid UserDTO userDTO,BindingResult bindingResult,Model model,HttpServletRequest request) {
-        System.out.println(userDTO);
-        System.out.println(bindingResult);
         if (!bindingResult.hasErrors()) {
             System.out.println(userDTO);
             if (usersService.signUp(userDTO)) {
@@ -51,7 +49,7 @@ public class ControllerAuth {
                 return signIn(request, userDTO);
             }
 //TODO: ошибку отображать как-то
-            return "redirect:sign";
+            return "redirect:sign?loginError";
         }else {
             model.addAttribute("userDTO", userDTO);
             return "registration";

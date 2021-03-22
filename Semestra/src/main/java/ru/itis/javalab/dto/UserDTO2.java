@@ -2,7 +2,6 @@ package ru.itis.javalab.dto;
 
 import lombok.*;
 import ru.itis.javalab.models.User;
-
 import java.util.Optional;
 
 /**

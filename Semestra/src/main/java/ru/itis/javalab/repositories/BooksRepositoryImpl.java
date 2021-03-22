@@ -5,6 +5,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import ru.itis.javalab.models.Book;
 import ru.itis.javalab.models.User;
+import ru.itis.javalab.models.WriterOrTranslator;
 
 import javax.sql.DataSource;
 import java.util.LinkedList;
@@ -29,7 +30,7 @@ public class BooksRepositoryImpl implements BooksRepository {
 
 
     private RowMapper<Book> userRowMapper = (row, i) -> {
-        //TODO:добавить вытаскивание автора и писателя
+        //TODO:добавить вытаскивание автора и переводчика (без списка книг должно хватить)только id?
        return Book.builder()
                 .id(row.getLong("id"))
                 .description(row.getString("description"))
@@ -37,6 +38,10 @@ public class BooksRepositoryImpl implements BooksRepository {
                 .linksToImage((new String[0]))
                 .name(row.getString("name"))
                 .year(row.getInt("year"))
+                .writer((WriterOrTranslator.writerBuilder()
+                        .biography(row.getString("biography"))
+                        .build()
+                ))
                 .build();
     };
 
