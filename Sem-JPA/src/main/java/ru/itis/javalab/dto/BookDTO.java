@@ -15,17 +15,24 @@ public class BookDTO {
     String author;
     String translator;
 
-    public static BookDTO from (Book book){
-        if(book.getIsTranslation()){
+    public static BookDTO from(Book book) {
+        if (book.getIsTranslation()) {
             return BookDTO.builder()
                     .name(book.getName())
-                    .author(book.getWriter().getName())
-                    .translator(book.getTranslator().getName())
+                    .author(book.getWriters().stream()
+                            .map(writer -> writer.getName())
+                            .reduce((s1,s2)->s1+s2).orElse("")
+                    )
+                    .translator(book.getTranslators().stream()
+                    .map(translator -> translator.getName())
+                    .reduce((s1,s2)->s1+s2).orElse(""))
                     .build();
         }
         return BookDTO.builder()
                 .name(book.getName())
-                .author(book.getWriter().getName())
+                .author(book.getWriters().stream()
+                        .map(writer -> writer.getName())
+                        .reduce((s1,s2)->s1+s2).orElse(""))
                 .build();
     }
 }

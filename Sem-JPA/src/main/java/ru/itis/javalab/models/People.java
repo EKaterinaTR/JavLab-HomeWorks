@@ -2,10 +2,15 @@ package ru.itis.javalab.models;
 
 import lombok.*;
 
+import javax.persistence.*;
+
 @Getter
 @Setter
+@MappedSuperclass
 @NoArgsConstructor
 public class People {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long id;
     private String name;
     private String biography;
