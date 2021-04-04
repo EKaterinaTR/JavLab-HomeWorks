@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.itis.javalab.models.Book;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -34,5 +37,9 @@ public class BookDTO {
                         .map(writer -> writer.getName())
                         .reduce((s1,s2)->s1+s2).orElse(""))
                 .build();
+    }
+
+    public static List<BookDTO> from(List<Book> someBooks) {
+        return someBooks.stream().map(x-> from(x)).collect(Collectors.toList());
     }
 }

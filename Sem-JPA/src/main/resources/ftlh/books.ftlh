@@ -20,7 +20,12 @@
 <div>
 
     <input id="log" type="text" placeholder="<@spring.message 'book_page.placeholder'/>" onkeyup="search();">
-
+    <div></div>
+    <#list books as book>
+        Name: ${book.name}
+        Author: ${book.author}
+    </#list>
+</div>
     <script>
         function search() {
             //отправка ajax запроса

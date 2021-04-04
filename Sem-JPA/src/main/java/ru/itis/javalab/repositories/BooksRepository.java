@@ -8,8 +8,11 @@ import ru.itis.javalab.models.Book;
 import java.util.List;
 
 public interface BooksRepository extends JpaRepository<Book, Long> {
-//    @Query("select book from Book ")
-//    List<Book> getSomeBooks(@Param("number")Long number);
-//    List<Book> getSomeBooksIncluded(Long number, String string);
+    @Query(value = "select * from book limit:number  ",
+            nativeQuery = true)
+    List<Book> getSomeBooks(@Param("number")Long number);
+    @Query(value = "select * from Book book where book.name like '%'+:part+'%' limit :number ",
+            nativeQuery = true)
+    List<Book> getSomeBooksIncluded(@Param("number")Long number,@Param("part") String string);
 
 }
