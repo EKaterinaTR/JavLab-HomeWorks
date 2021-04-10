@@ -55,6 +55,8 @@ public class UsersServiceImpl implements UsersService {
                     .linkToImage("")
                     .biography("")
                     .email(userDTO.getEmail())
+                    .role(User.Role.USER)
+                    .state(User.State.ACTIVE)
                     .build();
             usersRepository.save(newUser);
 
@@ -68,6 +70,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public boolean signIn(UserDTO userDTO) {
+        System.out.println(userDTO+"sign");
        User user = usersRepository.findByLogin(userDTO.getLogin()).
                 orElse(User.builder().hashOfpassword(passwordEncoder.encode(""))
                         .build());

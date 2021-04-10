@@ -16,6 +16,7 @@
 <div>
     <@spring.bind "userDTO"/>
     <form id="reg" method="post" action="sign">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
         <input id="log" type="text" name="login" placeholder="<@spring.message "registration_page.placeholder_login"/>"/>
         <label><@spring.message "registration_page.placeholder_password"/></label>
         <@spring.formPasswordInput "userDTO.password" "onkeyup=\"checkPasswordMatch();\""/>

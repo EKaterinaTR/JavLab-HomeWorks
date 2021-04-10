@@ -14,6 +14,7 @@
 </div>
 <div>
     <form method="post" action="enter">
+        <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
         <input type="text" name="login" placeholder="<@spring.message "enter_page.placeholder_login"/>">
         <input type="password" name="password" placeholder="<@spring.message "enter_page.placeholder_password"/>">
         <input type="submit" value="<@spring.message "enter_page.submit"/>">

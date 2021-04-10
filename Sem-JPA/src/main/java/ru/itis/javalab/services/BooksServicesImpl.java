@@ -9,17 +9,15 @@ import ru.itis.javalab.repositories.BooksRepository;
 import java.util.List;
 
 @Service
-public class BooksServicesImpl implements BookService{
+public class BooksServicesImpl implements BookService {
 
     @Autowired
     BooksRepository booksRepository;
 
     @Override
     public List<BookDTO> getSomeBooks() {
-        System.out.println("servis");
         List<Book> books = booksRepository.getSomeBooks(100L);
         List<BookDTO> bookDTO = BookDTO.from(books);
-        System.out.println("end servic");
 
         return BookDTO.from(booksRepository.getSomeBooks(100L));
     }
